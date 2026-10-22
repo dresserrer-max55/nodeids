@@ -20,7 +20,7 @@ env:
   GD_VERSION: "2.2091"
   GD_COMP_VERSION: "22091"
   GEODE_REF: "v6"
-  BINDINGS_REF: "5326138"
+  BINDINGS_REF: "d73aadd"
   CPM_SOURCE_CACHE: ${{ github.workspace }}/cpm-cache
 
 jobs:
