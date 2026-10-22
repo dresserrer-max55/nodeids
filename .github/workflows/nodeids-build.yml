@@ -84,6 +84,12 @@ jobs:
           # estos dos campos ya no existen en las bindings de 2.2091
           edit("src/EditorPauseLayer.cpp", [("m_guidelinesOffButton = m_guidelinesOnButton = nullptr;", "")])
 
+          # Las comprobaciones "verifyIDSafe(m_miembro, ...)" son solo avisos de depuracion, pero desreferencian campos de las
+          # clases del juego: con las bindings de Android 2.2091 esos campos pueden estar mal ubicados (crash al abrir "Saved").
+          open(f"{root}/src/IDCheck.hpp", "w", encoding="utf-8").write(
+              "#pragma once\n#define verifyIDSafe(Member_, ID_) do {} while (0)\n#define verifyParentIDSafe(Member_, ID_) do {} while (0)\n")
+          print("IDCheck.hpp desactivado")
+
           # clases cuyos miembros son privados / no existen en las bindings de Android 2.2091 (layout desconocido):
           # se omiten para no escribir en offsets incorrectos
           for f in ("GJUserCell.cpp", "InfoLayer.cpp", "LevelInfoLayer.cpp", "SetupObjectOptionsPopup.cpp"):
