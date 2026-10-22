@@ -119,6 +119,14 @@ jobs:
           ls cpm-cache/asp2 || true
           ls cpm-cache/asp2/*/include/asp/fs/Path.hpp || echo "FALTA asp/fs/Path.hpp en asp2"
 
+      - name: Ajustar la version de Geode en mod.json a la del SDK
+        shell: bash
+        run: |
+          V=$(tr -d '[:space:]' < "$GEODE_SDK/VERSION")
+          echo "Version del SDK: $V"
+          sed -i -E "s/(\"geode\"[[:space:]]*:[[:space:]]*)\"[^\"]*\"/\1\"$V\"/" mod_src/mod.json
+          grep -n '"geode"' mod_src/mod.json
+
       - name: Build mod
         shell: bash
         run: |
