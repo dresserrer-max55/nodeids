@@ -48,6 +48,47 @@ jobs:
           print(re.search(r'"gd"\s*:\s*\{[^}]*\}', n).group(0))
           PY
 
+      - name: Parchear fuentes de Node IDs para las bindings de 2.2091
+        shell: bash
+        run: |
+          python3 - mod_src <<'PY'
+          import sys, re, glob, os
+          root = sys.argv[1]
+          def edit(rel, pairs):
+              path = f"{root}/{rel}"
+              if not os.path.isfile(path):
+                  print("NO EXISTE", rel); return
+              t = open(path, encoding="utf-8").read(); n = t
+              for a, b in pairs:
+                  if a not in n: print("  (no encontrado en", rel, "):", a[:50].replace("\n", " "))
+                  n = n.replace(a, b)
+              if n != t:
+                  open(path, "w", encoding="utf-8").write(n); print("parcheado", rel)
+
+          # gd::string ya no existe
+          for f in glob.glob(f"{root}/src/*.cpp") + glob.glob(f"{root}/src/*.hpp"):
+              t = open(f, encoding="utf-8").read()
+              if "gd::string" in t:
+                  open(f, "w", encoding="utf-8").write(t.replace("gd::string", "std::string")); print("gd::string ->", f)
+
+          # firmas distintas en 2.2091
+          t = open(f"{root}/src/CustomSongWidget.cpp", encoding="utf-8").read()
+          t = re.sub(r"int unk\s*\n(\s*)\) \{", r"int unk, bool unkBool2, bool unkBool3\n\1) {", t, count=1)
+          t = re.sub(r"\bunk\s*\n(\s*)\)\) \{", r"unk, unkBool2, unkBool3\n\1)) {", t, count=1)
+          open(f"{root}/src/CustomSongWidget.cpp", "w", encoding="utf-8").write(t)
+          edit("src/FriendRequestPopup.cpp", [("bool init(GJFriendRequest* request) {", "bool init(GJFriendRequest* request, bool b) {"),
+                                              ("FriendRequestPopup::init(request)", "FriendRequestPopup::init(request, b)")])
+          edit("src/PlayLayer.cpp", [("bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {", "bool init(GJGameLevel* level, bool dontCreateObjects) {"),
+                                     ("PlayLayer::init(level, useReplay, dontCreateObjects)", "PlayLayer::init(level, dontCreateObjects)")])
+
+          # clases cuyos miembros son privados / no existen en las bindings de Android 2.2091 (layout desconocido):
+          # se omiten para no escribir en offsets incorrectos
+          for f in ("GJUserCell.cpp", "InfoLayer.cpp", "LevelInfoLayer.cpp"):
+              p = f"{root}/src/{f}"
+              if os.path.isfile(p):
+                  os.remove(p); print("omitido", f)
+          PY
+
       - name: Install Ninja
         run: sudo apt-get update && sudo apt-get install -y ninja-build
 
