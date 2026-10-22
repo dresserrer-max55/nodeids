@@ -81,6 +81,9 @@ jobs:
           edit("src/PlayLayer.cpp", [("bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {", "bool init(GJGameLevel* level, bool dontCreateObjects) {"),
                                      ("PlayLayer::init(level, useReplay, dontCreateObjects)", "PlayLayer::init(level, dontCreateObjects)")])
 
+          # estos dos campos ya no existen en las bindings de 2.2091
+          edit("src/EditorPauseLayer.cpp", [("m_guidelinesOffButton = m_guidelinesOnButton = nullptr;", "")])
+
           # clases cuyos miembros son privados / no existen en las bindings de Android 2.2091 (layout desconocido):
           # se omiten para no escribir en offsets incorrectos
           for f in ("GJUserCell.cpp", "InfoLayer.cpp", "LevelInfoLayer.cpp", "SetupObjectOptionsPopup.cpp"):
