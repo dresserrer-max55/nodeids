@@ -92,7 +92,7 @@ jobs:
 
           # clases cuyos miembros son privados / no existen en las bindings de Android 2.2091 (layout desconocido):
           # se omiten para no escribir en offsets incorrectos
-          for f in ("GJUserCell.cpp", "InfoLayer.cpp", "LevelInfoLayer.cpp", "SetupObjectOptionsPopup.cpp"):
+          for f in ("GJUserCell.cpp", "InfoLayer.cpp", "LevelInfoLayer.cpp", "SetupObjectOptionsPopup.cpp", "LevelBrowserLayer.cpp"):
               p = f"{root}/src/{f}"
               if os.path.isfile(p):
                   os.remove(p); print("omitido", f)
