@@ -92,7 +92,7 @@ jobs:
 
           # clases cuyos miembros son privados / no existen en las bindings de Android 2.2091 (layout desconocido):
           # se omiten para no escribir en offsets incorrectos
-          for f in ("GJUserCell.cpp", "InfoLayer.cpp", "LevelInfoLayer.cpp", "SetupObjectOptionsPopup.cpp", "LevelBrowserLayer.cpp"):
+          for f in ("GJUserCell.cpp", "InfoLayer.cpp", "LevelInfoLayer.cpp", "SetupObjectOptionsPopup.cpp", "LevelBrowserLayer.cpp", "ProfilePage.cpp", "EditorUI.cpp", "EditorPauseLayer.cpp", "EditLevelLayer.cpp"):
               p = f"{root}/src/{f}"
               if os.path.isfile(p):
                   os.remove(p); print("omitido", f)
@@ -227,4 +227,3 @@ jobs:
             output/geode.node-ids.geode
             mod_src/build/geode.node-ids.geode
           if-no-files-found: error
-          
